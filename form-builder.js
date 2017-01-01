@@ -80,7 +80,7 @@ var FB = (function() {
 		return result;
 	};
 	
-	function updateFields(scope, pathname) {
+	function updateFields(scope, pathname, fresh) {
 		
 		pathname = pathname || '';	
 			
@@ -89,7 +89,7 @@ var FB = (function() {
 			if (scope[key] instanceof Object && !(scope[key] instanceof Array)) {
 				
 				var nextPathname = pathname + '[' + key + ']';
-				updateFields(scope[key], nextPathname);
+				updateFields(scope[key], nextPathname, fresh);
 				
 			} else {
 				
@@ -103,23 +103,59 @@ var FB = (function() {
 					curPathname += '[]';
 				}
 				
-				debugger
-				var field = formElem.querySelector('[name="' + curPathname + '"]');
+				var field;
+				if (fresh) {
+					
+					debugger
+					if (scope[key] instanceof Array) {
+						field = document.createElement('select');
+					} else {
+						field = document.createElement('input');
+						field.type = 'text';
+					}
+					
+					formElem.appendChild(field);
+					
+				} else {
+					
+					field = formElem.querySelector('[name="' + curPathname + '"]');
+				}
+				
 				field.value = scope[key];
 			}
 		});
-		
+	}
+	
+	function clearForm() {
+		var fields = formElem.querySelectorAll('[name]');					
+		[].forEach.call(fields, function(field) {					
+			field.value = null;
+		});
 	}
 	
 	return {
-		make: function(formSelector) {
+		make: function(formSelector, options) {
 			
 			formElem = document.querySelector(formSelector);
+			
+			options = options || [];
+			options.forEach(function(option){
+				var specFields = formElem.querySelectorAll('[name="' + option.name + '"]');
+				[].forEach.call(specFields, function(field) {
+					Object.defineProperty(field, 'value', {
+						get: option.getter,
+						set: option.setter
+					});  
+				});
+			});
 			
 			var fb = {
 				form: formElem,
 				// CREATE
 				// todo: make create elements by object
+				create: function(schema) {
+					updateFields(schema, null, true);
+				},
 				
 				// READ
 				get data() {
@@ -133,7 +169,6 @@ var FB = (function() {
 					return data;
 				},
 				readDataByFieldName: function(fieldName) {
-					debugger
 					var field = formElem.querySelector('[name="' + fieldName + '"]');
 					return readFromField(field);
 				},
@@ -148,25 +183,18 @@ var FB = (function() {
 				},
 				
 				// UPDATE
-				set data(v) {
-					
-					debugger
-					
-					updateFields(v);
-					
+				set data(schema) {
+					if (schema === null) {
+						clearForm();
+					} else {
+						updateFields(schema);
+					}
 				},
 				
-				updateDataByFieldName: function(v) {
-					
-					
-				},
-				
-				updateFieldByFieldName: function(v) {
-					
-					
-				},
-				
-				// DELETE 
+				// DELETE
+				clear: function() {
+					clearForm();
+				}
 			};
 			
 			return fb;
