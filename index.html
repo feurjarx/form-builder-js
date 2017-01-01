@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <link rel="stylesheet" href="style.css">
+	<script src="form-builder.js"></script>
+  </head>
+
+  <body>
+    
+	<form id="user-form">
+	
+		<div>
+			<label>User name:
+				<input type="text" name="user[name]" value="Roman"/>
+			</label>
+		</div>
+	
+		<div>
+			<label>Code:
+				<input type="number" name="user[code]" value="123"/>
+			</label>
+		</div>
+		
+		<div>
+			<label>Website:
+				<input type="text" name="user[website][url]" value="http://vk.com" />
+			</label>
+		</div>
+		
+		<div>
+			<label>Website ids:
+				<input id="website_ids" type="text" name="user[website][ids][elems][]" value="123" />
+			</label>
+		</div>
+		
+		<div>
+			<label>Shops:
+				<select multiple name="user[shops][]">
+					<option selected value="ali">Aliexpress</option>
+					<option selected value="bing">Bing</option>
+					<option value="china">Chinashop</option>
+				</select>
+			</label>
+		</div>
+		
+		<div>
+			<label>Secondary shop:
+				<input type="text" name="user[shops][]" value="Test" />
+			</label>
+		</div>
+		
+		<div>
+			<label>Method auth:
+				<select name="method">
+					<option data="{key: inf2b, text: 'mi5'}">green safe</option>
+					<option data="{key: meta_incapsulation, text: 'meta'}">META</option>
+				</select>
+			</label>
+		</div>
+		
+	</form>
+	
+	<script src="script.js"></script>
+	
+  </body>
+
+</html>
