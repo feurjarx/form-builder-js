@@ -89,6 +89,18 @@ fb.create({
 ```js
 var fb = FB.make('#form');
 console.log(fb.data);
+/* 
+{
+	"user": {
+		"name":"Roman",
+		"code":"1234",
+		"website": {
+			"url":"http://mysite.com"
+		},
+		"shops": ["shop_1","shop_3","Test shop"]
+	}
+}
+*/
 ```
 
 ### Example 4 - Write data to form.
