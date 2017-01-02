@@ -126,7 +126,7 @@ fb.clear();
 var fb = FB.make('#form', [{
 	selector: '#method',
 	getter: function() {
-      		// you code
+      	// you code
 		return this.selectedOptions[0].dataset.value;
 	},
 	setter: function(v) {
