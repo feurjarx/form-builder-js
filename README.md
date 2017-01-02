@@ -1,6 +1,5 @@
 # form-builder-js
-This javascript module allows you to bind elements of the form with data.
-
+This javascript module allows you to bind elements of the form with data. [Plunker demo](http://plnkr.co/edit/pSMV4UhIoZATBl42Kyzo?p=preview)
 ## Use
 ### Example 1 - Init fb.
 ```HTML
