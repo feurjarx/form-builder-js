@@ -25,7 +25,7 @@ This javascript module allows you to bind elements of the form with data.
          </div>
          <div>
             <label>Code:
-            <input type="number" name="user[code]" value="123"/>
+               <input type="number" name="user[code]" value="123"/>
             </label>
          </div>
          <div>
