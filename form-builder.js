@@ -2,20 +2,50 @@ var FB = (function() {
 	
 	var formElem;
 	
-	function readFromField(field) {
+	function buildControlBox(label, fieldElem) {
+		var controlBox = formElem
+			.querySelector('*')
+			.cloneNode(true); 
+
+		if (controlBox) {
+			
+			var controlLabelElem = controlBox.querySelector('* label');
+			if (!controlLabelElem) {
+				controlLabelElem = document.createElement('label');
+			}
+			
+			if (controlLabelElem.childNodes.length) {
+				controlLabelElem.childNodes[0].textContent = label;
+			} else {
+				controlLabelElem.textContent = label;
+			}
+			
+			var controlFieldElem = controlBox.querySelector('* input');
+			if (!controlFieldElem) {
+				controlFieldElem = controlBox.querySelector('* select');
+			}			
+			
+			if (controlFieldElem) {
+				controlFieldElem.parentNode.insertBefore(fieldElem, controlFieldElem);
+				controlFieldElem.parentNode.removeChild(controlFieldElem);
+				
+			} else {
+				
+				controlBox.appendChild(fieldElem);
+			}
+		}
+		
+		return controlBox;
+	}
+	
+	function readFromField(fieldElem) {
 		
 		var result = {};
 		var parent = result;
-		var key;
-	
-		var parts = field.name.split('[');
-	
-		var startValue;
 		
-		parts.forEach(function(part, i){
+		var startValue;
+		splitPathname(fieldElem.name, function(key, i, parts){
 			
-			key = part.replace(']', '');
-
 			if (parts[i + 1] && parts[i + 1] === ']') {
 				startValue = [];
 			} else {
@@ -26,20 +56,20 @@ var FB = (function() {
 				
 				if (parent instanceof Array) {
 				
-					if (field.selectedOptions instanceof HTMLCollection) {
+					if (fieldElem.selectedOptions instanceof HTMLCollection) {
 					
-						[].forEach.call(field.selectedOptions, function(optionElem) {
+						[].forEach.call(fieldElem.selectedOptions, function(optionElem) {
 							parent.push(optionElem.value);
 						});
 					
 					} else {
 						
-						parent.push(field.value);
+						parent.push(fieldElem.value);
 					}
 				
 				} else {
 					
-					parent[key] = field.value;
+					parent[key] = fieldElem.value;
 				}
 				
 			} else {
@@ -49,34 +79,7 @@ var FB = (function() {
 			
 			parent = parent[key];
 		});
-	
-		return result;
-	};
-	
-	function objectMerge() {
 		
-		var result = {};
-		for (var i = 0; i < arguments.length; i++) {
-			var obj = arguments[i];
-
-			if (!obj) {
-				continue;
-			}
-
-			for (var key in obj) {
-				if (obj.hasOwnProperty(key)) {
-					if (typeof obj[key] === 'object' && !(obj[key] instanceof Array)) {
-					  
-					  result[key] = objectMerge(result[key], obj[key]);
-					
-					} else {
-					  
-					  result[key] = obj[key];
-					}
-				}
-			}
-		}
-
 		return result;
 	};
 	
@@ -97,41 +100,124 @@ var FB = (function() {
 				curPathname = curPathname
 					.replace('[', '')
 					.replace(']', '')
-					;
+				;
 				
 				if (scope[key] instanceof Array) {
 					curPathname += '[]';
 				}
 				
-				var field;
+				var fieldElem;
 				if (fresh) {
 					
-					debugger
+					var label;
 					if (scope[key] instanceof Array) {
-						field = document.createElement('select');
+						
+						fieldElem = document.createElement('select');
+						
+						var option = document.createElement('option');
+						
+						scope[key].forEach(function(v) {
+							
+							option.value = v;
+							if (option.value) {
+								option.textContent = option.value.replace(/_/g, ' ');
+								option.textContent = option.textContent[0].toUpperCase() + option.textContent.slice(1);
+							}
+							
+							fieldElem.appendChild(option.cloneNode(true));
+						});
+						
+						fieldElem.value = option.value;
+
+						label = '';
+						splitPathname(curPathname, function(key, i, parts) {
+							if (i === 0) {
+								key = key[0].toUpperCase() + key.slice(1);
+								label += key.replace(/_/g, ' ');
+							}
+							
+							if (i === parts.length - 1) {
+								label += key.replace(/_/g, ' ');
+							}
+						});
+						
+						label += ': ';
+						
 					} else {
-						field = document.createElement('input');
-						field.type = 'text';
+						
+						fieldElem = document.createElement('input');
+						fieldElem.type = 'text';
+						fieldElem.value = scope[key];
+						
+						label = key[0].toUpperCase() + key.slice(1) + ': ';
+						label = label.replace(/_/g, ' ');
 					}
 					
-					formElem.appendChild(field);
+					fieldElem.name = curPathname;
+					
+					var controlBox = buildControlBox(label, fieldElem);
+					formElem.appendChild(controlBox);
 					
 				} else {
 					
-					field = formElem.querySelector('[name="' + curPathname + '"]');
+					fieldElem = formElem.querySelector('[name="' + curPathname + '"]');
+					if (fieldElem) {
+						fieldElem.value = scope[key];
+					} else {
+						console.error('Field with name is "' + curPathname + '" not found.')
+					}
 				}
-				
-				field.value = scope[key];
 			}
 		});
 	}
 	
 	function clearForm() {
 		var fields = formElem.querySelectorAll('[name]');					
-		[].forEach.call(fields, function(field) {					
-			field.value = null;
+		[].forEach.call(fields, function(fieldElem) {					
+			fieldElem.value = null;
 		});
 	}
+	
+	function splitPathname(pathname, callback) {
+		var parts = pathname.split('[');
+		parts.forEach(function(part, i) {
+			callback(part.replace(']', ''), i, parts);
+		});
+	}
+	
+	function objectMerge() {
+		
+		var result = {};
+		for (var i = 0; i < arguments.length; i++) {
+			var obj = arguments[i];
+
+			if (!obj) {
+				continue;
+			}
+
+			for (var key in obj) {
+				if (obj.hasOwnProperty(key)) {
+					if (typeof obj[key] === 'object' && !(obj[key] instanceof Array)) {
+					  
+					  result[key] = objectMerge(result[key], obj[key]);
+					
+					} else {
+					  
+					  if (result[key] instanceof Array && obj[key] instanceof Array) {
+
+						result[key] = result[key].concat(obj[key]);
+						
+					  } else {
+						
+						result[key] = obj[key];						
+					  }
+					}
+				}
+			}
+		}
+
+		return result;
+	};
 	
 	return {
 		make: function(formSelector, options) {
@@ -140,43 +226,42 @@ var FB = (function() {
 			
 			options = options || [];
 			options.forEach(function(option){
-				var specFields = formElem.querySelectorAll('[name="' + option.name + '"]');
-				[].forEach.call(specFields, function(field) {
-					Object.defineProperty(field, 'value', {
+				var specFields = formElem.querySelectorAll(option.selector);
+				[].forEach.call(specFields, function(fieldElem) {
+					Object.defineProperty(fieldElem, 'value', {
 						get: option.getter,
 						set: option.setter
 					});  
 				});
 			});
 			
-			var fb = {
+			return {
 				form: formElem,
+				
 				// CREATE
-				// todo: make create elements by object
 				create: function(schema) {
 					updateFields(schema, null, true);
 				},
 				
 				// READ
-				get data() {
-					
+				get data() {					
 					var fields = formElem.querySelectorAll('[name]');
 					var data = {};
-					[].forEach.call(fields, function(field) {					
-						data = objectMerge(data, readFromField(field));
+					[].forEach.call(fields, function(fieldElem) {					
+						data = objectMerge(data, readFromField(fieldElem));
 					});
 					
 					return data;
 				},
 				readDataByFieldName: function(fieldName) {
-					var field = formElem.querySelector('[name="' + fieldName + '"]');
-					return readFromField(field);
+					var fieldElem = formElem.querySelector('[name="' + fieldName + '"]');
+					return readFromField(fieldElem);
 				},
 				readDataByFieldSelector: function(selector) {
 					var fields = formElem.querySelectorAll(selector);
 					var data = {};
-					[].forEach.call(fields, function(field) { 
-						data = objectMerge(data, readFromField(field));
+					[].forEach.call(fields, function(fieldElem) { 
+						data = objectMerge(data, readFromField(fieldElem));
 					});
 					
 					return data;
@@ -196,8 +281,6 @@ var FB = (function() {
 					clearForm();
 				}
 			};
-			
-			return fb;
 		}
 	}
 }());
