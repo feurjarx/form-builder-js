@@ -1,5 +1,5 @@
 var fb = FB.make('#user-form', [{
-	name: 'method',
+	selector: 'method',
 	getter: function() {
 		return this.selectedOptions[0].dataset.value;
 	},
@@ -18,9 +18,12 @@ var fb = FB.make('#user-form', [{
 fb.create({
 	info: 'abc',
 	params: {
-		email: 'asds@dsad'
+		email: 'asds@dsad',
+		arr_box: {
+			arr: [1,'dsa_2_df',3]
+		}
 	}
-};
+});
 
 // Read
 console.table(fb.data);
