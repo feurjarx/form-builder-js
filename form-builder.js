@@ -296,10 +296,10 @@ var FB = (function() {
 				
 				// UPDATE
 				set data(schema) {
-					if (schema === null) {
-						clearForm();
-					} else {
+					if (schema) {
 						updateFields(schema);
+					} else {
+						throw new Error('Bad data.');
 					}
 				},
 				
