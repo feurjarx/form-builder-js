@@ -3,15 +3,20 @@ var FB = (function() {
 	var formElem;
 	
 	function buildControlBox(label, fieldElem) {
-		var controlBox = formElem
-			.querySelector('*')
-			.cloneNode(true); 
-
-		if (controlBox) {
+		
+		var controlBox;
+		var controlLabelElem;
+		var controlFieldElem;
+		
+		var standardElem = formElem.querySelector('*');
+		if (standardElem) {
 			
-			var controlLabelElem = controlBox.querySelector('* label');
+			controlBox = standardElem.cloneNode(true); 
+			
+			controlLabelElem = controlBox.querySelector('* label');
 			if (!controlLabelElem) {
 				controlLabelElem = document.createElement('label');
+				controlBox.appendChild(controlLabelElem);
 			}
 			
 			if (controlLabelElem.childNodes.length) {
@@ -20,7 +25,7 @@ var FB = (function() {
 				controlLabelElem.textContent = label;
 			}
 			
-			var controlFieldElem = controlBox.querySelector('* input');
+			controlFieldElem = controlBox.querySelector('* input');
 			if (!controlFieldElem) {
 				controlFieldElem = controlBox.querySelector('* select');
 			}			
@@ -33,6 +38,14 @@ var FB = (function() {
 				
 				controlBox.appendChild(fieldElem);
 			}
+			
+		} else {
+			
+			controlBox = document.createElement('div'); 				
+			controlLabelElem = document.createElement('label');
+			controlLabelElem.textContent = label;
+			controlBox.appendChild(controlLabelElem);
+			controlBox.appendChild(fieldElem);
 		}
 		
 		return controlBox;
