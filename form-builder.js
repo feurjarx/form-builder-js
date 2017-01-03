@@ -81,7 +81,7 @@ var FB = (function() {
 		});
 		
 		return result;
-	};
+	}
 	
 	function updateFields(scope, pathname, fresh) {
 		
