@@ -175,7 +175,21 @@ var FB = (function() {
 					
 					fieldElem = formElem.querySelector('[name="' + curPathname + '"]');
 					if (fieldElem) {
-						fieldElem.value = scope[key];
+						if (scope[key] instanceof Array 
+							&& 
+							fieldElem.tagName === 'SELECT' 
+							&& 
+							fieldElem.multiple
+						) {
+							[].forEach.call(fieldElem.options, function(option) {
+								option.selected = scope[key].indexOf(option.value) !== -1;
+							});
+							
+						} else {
+							
+							fieldElem.value = scope[key];
+						}
+						
 					} else {
 						console.error('Field with name is "' + curPathname + '" not found.')
 					}
