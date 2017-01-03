@@ -131,8 +131,8 @@ fb.clear();
    <div>
       <label>Method auth:
          <select id="method" name="method">
-            <option value=1 data-value='{"key": "inf2b", "text": "mi5"}'>green safe</option>
-            <option value=2 data-value='{"key": "meta_incapsulation", "text": "meta"}'>META</option>
+            <option value=1 data-value='{"key": "key1", "text": "text1"}'>text 1</option>
+            <option value=2 data-value='{"key": "key2", "text": "text2"}'>text 2</option>
          </select>
       </label>
    </div>
