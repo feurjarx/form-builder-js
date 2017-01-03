@@ -122,8 +122,6 @@ fb.data = {
 ```
 ### Example 5 - Clear form and data.
 ```js
-fb.data = null;
-// or ...
 fb.clear();
 ```
 ### Example 6 - Not simple controls (controls customization). For select2 fields.
