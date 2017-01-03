@@ -27,22 +27,27 @@ var fb = FB.make('#form');
 ```
 ```js
 var fb = FB.make('#form');
+
 fb.create({
-   form: {
-      name: 'form name'
-   },
-   user: {
-      name: 'Roman',
-      code: 12345,
-      website: {
-         url: 'www.google.com'
-      },
-      shops: [
-         'shop_1',
-         'shop_2',
-         'shop_3'
-      ]
-   }
+  myParams: {
+    'param-1': 1,
+    'param-2': [2, 2, 3]
+  },
+  info: {
+    name: 'this example form name'
+  },
+  user: {
+    name: 'Roman',
+    code: 12345,
+    website: {
+      url: 'www.mysite.com'
+    },
+    shops: [
+      'shop_1',
+      'shop_2',
+      'shop_3'
+    ]
+  }
 });
 ```
 
