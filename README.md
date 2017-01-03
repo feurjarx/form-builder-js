@@ -114,6 +114,11 @@ console.log(fb.data);
 }
 */
 ```
+Also method readDataByFieldName(name) or readDataByFieldSelector(selector):
+```js
+data = fb.readDataByFieldName('my_name');
+data = fb.readDataByFieldSelector('.my-class-selector');
+```
 
 ### Example 4 - Write data to form.
 ```js
