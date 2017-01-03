@@ -310,30 +310,4 @@ var FB = (function() {
       };
     }
   }
-}());: function(selector) {
-          var fields = formElem.querySelectorAll(selector);
-          var data = {};
-          [].forEach.call(fields, function(fieldElem) {
-            data = objectMerge(data, readFromField(fieldElem));
-          });
-
-          return data;
-        },
-
-        // UPDATE
-        set data(schema) {
-          if (schema) {
-            updateFields(schema);
-          } else {
-            throw new Error('Bad data.');
-          }
-        },
-
-        // DELETE
-        clear: function() {
-          clearForm();
-        }
-      };
-    }
-  }
 }());
