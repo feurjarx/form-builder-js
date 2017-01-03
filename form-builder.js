@@ -244,7 +244,7 @@ var FB = (function() {
 		}
 
 		return result;
-	};
+	}
 	
 	return {
 		make: function(formSelector, options) {
