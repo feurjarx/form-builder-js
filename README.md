@@ -123,7 +123,8 @@ fb.data = {
   },
   user: {
     name: 'feurjarx',
-    shops: ['shop_2', 'shop_3']
+    shops: ['shop_2', 'shop_3'],
+    repo: 'bitbucket'
   }
 };
 ```
