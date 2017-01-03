@@ -1,0 +1,13 @@
+{
+  "name": "form-builder-js",
+  "main": "dist/form-builder.js",
+  "license": "MIT",
+  "keywords": [
+    "javascript",
+    "browser",
+    "library",
+    "form",
+    "builder",
+    "data binding"
+  ]
+}
