@@ -111,12 +111,13 @@ console.log(fb.data);
 ### Example 4 - Write data to form.
 ```js
 fb.data = {
-   form: {
-      name: 'Test test test'
-   },
-	user: {
-		name: 'feurjarx'
-	}
+  form: {
+    name: 'Test test test'
+  },
+  user: {
+    name: 'feurjarx',
+    shops: ['shop_2', 'shop_3']
+  }
 };
 ```
 ### Example 5 - Clear form and data.
