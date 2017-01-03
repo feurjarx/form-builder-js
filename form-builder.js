@@ -31,6 +31,7 @@ var FB = (function() {
       }
 
       if (controlFieldElem) {
+        fieldElem.className = controlFieldElem.className;
         controlFieldElem.parentNode.insertBefore(fieldElem, controlFieldElem);
         controlFieldElem.parentNode.removeChild(controlFieldElem);
 
@@ -284,6 +285,32 @@ var FB = (function() {
           return readFromField(fieldElem);
         },
         readDataByFieldSelector: function(selector) {
+          var fields = formElem.querySelectorAll(selector);
+          var data = {};
+          [].forEach.call(fields, function(fieldElem) {
+            data = objectMerge(data, readFromField(fieldElem));
+          });
+
+          return data;
+        },
+
+        // UPDATE
+        set data(schema) {
+          if (schema) {
+            updateFields(schema);
+          } else {
+            throw new Error('Bad data.');
+          }
+        },
+
+        // DELETE
+        clear: function() {
+          clearForm();
+        }
+      };
+    }
+  }
+}());: function(selector) {
           var fields = formElem.querySelectorAll(selector);
           var data = {};
           [].forEach.call(fields, function(fieldElem) {
