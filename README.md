@@ -81,7 +81,7 @@ fb.create({
                <option selected value="shop_3">Shop 3</option>
             </select>
          </div>
-	 <div>
+         <div>
             <label>Repo:</label>
             <select name="user[repo]">
                <option selected value="github">Github</option>
