@@ -140,13 +140,12 @@ fb.clear();
 ```
 ```js
 var fb = FB.make('#form', [{
-	selector: '#method',
+	selector: '[name="method"]',
 	getter: function() {
-      	// you code
 		return this.selectedOptions[0].dataset.value;
 	},
 	setter: function(v) {
-		// you code
+		
 		[].forEach.call(this.options, function(optionElem) {
 			if (optionElem.dataset.value === v) {
 				optionElem.selected = true;
